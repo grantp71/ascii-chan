@@ -26,11 +26,13 @@ class Art(db.Model):
 
 class MainPage(Handler):
     def render_front(self, title="", art="", error=""):
-        arts =  db.GqlQuerry("")
-        self.render("front.html", title=title, art=art, error=error)
+        arts = db.GqlQuery("SELECT * FROM Art "
+                            "ORDER BY created DESC ")
+
+        self.render("front.html", title=title, art=art, error=error, arts=arts)
 
     def get(self):
-        self.render.front()
+        self.render_front()
 
     def post(self):
         title = self.request.get("title")
@@ -52,5 +54,5 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write('Hello world!')
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainPage)
 ], debug=True)
